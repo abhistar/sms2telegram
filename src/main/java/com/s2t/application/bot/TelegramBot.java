@@ -1,7 +1,6 @@
 package com.s2t.application.bot;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -19,15 +18,13 @@ public class TelegramBot extends TelegramLongPollingBot {
     private String telegramBotUsername;
 
     @Override
-    @Bean
     public String getBotUsername() {
         return telegramBotUsername;
     }
 
     @Override
-    @Bean
     public String getBotToken() {
-        return "telegramBotToken";
+        return telegramBotToken;
     }
 
     @Override
