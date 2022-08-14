@@ -1,4 +1,4 @@
-package com.s2t.application;
+package com.s2t.application.config;
 
 import com.s2t.application.core.MyUserDetailsService;
 import lombok.RequiredArgsConstructor;

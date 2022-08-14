@@ -1,5 +1,6 @@
-package com.s2t.application.core;
+package com.s2t.application.util;
 
+import com.s2t.application.model.UserEntity;
 import lombok.experimental.UtilityClass;
 import org.springframework.security.core.userdetails.User;
 

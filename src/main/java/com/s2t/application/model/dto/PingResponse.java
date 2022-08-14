@@ -1,4 +1,4 @@
-package com.s2t.application.model;
+package com.s2t.application.model.dto;
 
 import lombok.Builder;
 import lombok.Data;

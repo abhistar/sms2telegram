@@ -1,6 +1,8 @@
 package com.s2t.application.core;
 
 import com.s2t.application.bot.TelegramBot;
+import com.s2t.application.model.dto.AuthRegisterResponse;
+import com.s2t.application.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;

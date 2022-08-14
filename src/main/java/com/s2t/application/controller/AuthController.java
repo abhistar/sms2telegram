@@ -1,5 +1,7 @@
-package com.s2t.application.core;
+package com.s2t.application.controller;
 
+import com.s2t.application.model.dto.AuthRegisterResponse;
+import com.s2t.application.core.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

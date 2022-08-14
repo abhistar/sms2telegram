@@ -1,7 +1,7 @@
-package com.s2t.application.core;
+package com.s2t.application.controller;
 
 import com.s2t.application.bot.TelegramBot;
-import com.s2t.application.model.PingResponse;
+import com.s2t.application.model.dto.PingResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ public class PingController {
     private String testChatId;
 
     @GetMapping("/ping/{messageText}")
-    public ResponseEntity<PingResponse> getPingResponse(@PathVariable String messageText) {
+    public ResponseEntity<PingResponse> getPingResponseInWebAndTelegram(@PathVariable String messageText) {
         SendMessage message = SendMessage.builder().chatId(testChatId).text(messageText).build();
         telegramBot.sendMessage(message);
 

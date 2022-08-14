@@ -1,5 +1,8 @@
 package com.s2t.application.core;
 
+import com.s2t.application.model.UserEntity;
+import com.s2t.application.model.repository.UserRepository;
+import com.s2t.application.util.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

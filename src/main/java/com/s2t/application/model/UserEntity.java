@@ -1,4 +1,4 @@
-package com.s2t.application.core;
+package com.s2t.application.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
