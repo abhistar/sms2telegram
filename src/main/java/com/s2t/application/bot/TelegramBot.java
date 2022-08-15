@@ -8,6 +8,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import lombok.extern.slf4j.Slf4j;
 
+import static com.s2t.application.util.StringConstants.*;
+
 @Component
 @Slf4j
 public class TelegramBot extends TelegramLongPollingBot {
@@ -33,17 +35,45 @@ public class TelegramBot extends TelegramLongPollingBot {
             String messageText = update.getMessage().getText();
             long chatId = update.getMessage().getChatId();
 
-            SendMessage sendMessage = SendMessage.builder().chatId(chatId).text(messageText).build();
-
-            try {
-                execute(sendMessage);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+            executeNextAction(chatId, messageText);
         }
     }
 
-    public void sendMessage(SendMessage message) {
+    public void sendMessage(long chatId, String messageText) {
+        SendMessage message = SendMessage.builder().chatId(chatId).text(messageText).build();
+        sendMessage(message);
+    }
+
+    private void executeNextAction(long chatId, String messageText) {
+        if(messageText.startsWith("/")) {
+            processCommand(chatId, messageText.substring(1));
+        } else {
+            processMessage(chatId, messageText);
+        }
+    }
+
+    private void processMessage(long chatId, String messageText) {
+        sendMessage(chatId, messageText);
+    }
+
+    private void processCommand(long chatId, String substring) {
+        switch (substring) {
+            case START:
+                sendMessage(chatId, WELCOME_MESSAGE);
+                break;
+            case READ:
+                sendMessage(chatId, READING_SMS_MESSAGE);
+                break;
+            case STOP_READ:
+                sendMessage(chatId, STOP_READING_SMS_MESSAGE);
+                break;
+            default:
+                sendMessage(chatId, COMMAND_UNKNOWN_MESSAGE);
+                break;
+        }
+    }
+
+    private void sendMessage(SendMessage message) {
         try {
             execute(message);
         } catch (TelegramApiException e) {

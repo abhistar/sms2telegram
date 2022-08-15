@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+
+import static com.s2t.application.util.StringConstants.PONG;
 
 @RestController
 @RequestMapping("/ping")
@@ -19,20 +20,18 @@ public class PingController {
     private final TelegramBot telegramBot;
 
     @Value("${telegram.bit.test.chat_id}")
-    private String testChatId;
+    private Long testChatId;
 
     @GetMapping("")
     public PingResponse getPingResponseInWebAndTelegram() {
-        SendMessage message = SendMessage.builder().chatId(testChatId).text("PONG").build();
-        telegramBot.sendMessage(message);
+        telegramBot.sendMessage(testChatId, PONG);
 
-        return PingResponse.builder().reply("PONG").build();
+        return PingResponse.builder().reply(PONG).build();
     }
 
     @GetMapping("/{messageText}")
     public ResponseEntity<PingResponse> getCustomPingResponseInWebAndTelegram(@PathVariable String messageText) {
-        SendMessage message = SendMessage.builder().chatId(testChatId).text(messageText).build();
-        telegramBot.sendMessage(message);
+        telegramBot.sendMessage(testChatId, messageText);
 
         return new ResponseEntity<>(PingResponse.builder().reply(messageText).build(), HttpStatus.OK);
     }

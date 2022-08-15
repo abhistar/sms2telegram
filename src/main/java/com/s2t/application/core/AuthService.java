@@ -12,11 +12,11 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 public class AuthService {
     private final TelegramBot telegramBot;
 
-    public AuthRegisterResponse registerUser(String id) {
+    public AuthRegisterResponse registerUser(Long id) {
         String OtpToken = AuthUtil.generateOTP();
         String token = "token";
 
-        telegramBot.sendMessage(SendMessage.builder().chatId(id).text("Confirm your OTP here").build());
+        telegramBot.sendMessage(id,"Confirm your OTP here");
 
         return AuthRegisterResponse.builder().otp(OtpToken).token(token).build();
     }

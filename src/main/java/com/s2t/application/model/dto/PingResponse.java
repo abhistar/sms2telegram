@@ -7,4 +7,5 @@ import lombok.Data;
 @Builder
 public class PingResponse {
     private String reply;
+    private Boolean fetchSms;
 }
