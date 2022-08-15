@@ -4,8 +4,6 @@ import com.s2t.application.bot.TelegramBot;
 import com.s2t.application.model.dto.PingResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,13 +24,13 @@ public class PingController {
     public PingResponse getPingResponseInWebAndTelegram() {
         telegramBot.sendMessage(testChatId, PONG);
 
-        return PingResponse.builder().reply(PONG).build();
+        return PingResponse.builder().message(PONG).build();
     }
 
     @GetMapping("/{messageText}")
-    public ResponseEntity<PingResponse> getCustomPingResponseInWebAndTelegram(@PathVariable String messageText) {
+    public PingResponse getCustomPingResponseInWebAndTelegram(@PathVariable String messageText) {
         telegramBot.sendMessage(testChatId, messageText);
 
-        return new ResponseEntity<>(PingResponse.builder().reply(messageText).build(), HttpStatus.OK);
+        return PingResponse.builder().message(messageText).build();
     }
 }

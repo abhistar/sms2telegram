@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class PingResponse {
-    private String message;
-    private Boolean fetchSms;
+public class SmsRequest {
+    private Long chatId;
+    private String smsMessage;
 }
