@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class UserMapper {
     public User getUserFromUserEntities(UserEntity userEntity) {
         return new User(
-            userEntity.getChatId(),
+            userEntity.getUserId(),
             userEntity.getPassword(),
             new ArrayList<>());
     }
