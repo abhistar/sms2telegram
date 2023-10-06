@@ -22,10 +22,6 @@ public class BotContextHandler {
             .map(cmd -> new BotCommand(cmd.getCommand(), cmd.getMessage()))
             .collect(Collectors.toList());
 
-//    public BotContextHandler(TelegramBot bot) throws TelegramApiException {
-//        this.bot = bot;
-//    }
-
     public void handleContext() throws TelegramApiException {
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         List<BotCommand> commandArrayList = this.bot.execute(new GetMyCommands());
