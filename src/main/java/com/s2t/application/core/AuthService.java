@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
+import static com.s2t.application.util.StringConstants.Message.CONFIRM_YOUR_OTP_HERE_WITH_OTP_COMMAND;
+import static com.s2t.application.util.StringConstants.Message.USER_ALREADY_REGISTERED;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -28,11 +31,11 @@ public class AuthService {
 
         UserEntity user = userService.loadUserByUserId(id);
         if(Objects.nonNull(user) && user.getIsActive()) {
-            return OtpResponse.builder().message("User already registered").build();
+            return OtpResponse.builder().message(USER_ALREADY_REGISTERED).build();
         }
         otpCache.addKey(id, otpToken);
 
-        telegramBot.sendMessage(id,"Confirm your OTP here with /otp command");
+        telegramBot.sendMessage(id,CONFIRM_YOUR_OTP_HERE_WITH_OTP_COMMAND);
 
         return OtpResponse.builder().otp(otpToken).message("token").build();
     }

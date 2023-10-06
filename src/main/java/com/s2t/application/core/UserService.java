@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static com.s2t.application.util.StringConstants.ExceptionMessage.USERNAME_NOT_FOUND;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -29,7 +31,7 @@ public class UserService implements UserDetailsService {
             return UserMapper.getUserFromUserEntities(loadUserByUserId(userId));
         }
         catch (Exception e) {
-            throw new UsernameNotFoundException("Username not found");
+            throw new UsernameNotFoundException(USERNAME_NOT_FOUND);
         }
     }
 

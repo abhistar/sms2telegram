@@ -27,6 +27,20 @@ public class StringConstants {
         public static final String PROCESSING_OTP = "Processing OTP";
 
         public static final String COMMAND_UNKNOWN_MESSAGE = "Command unknown, use menu to see list of commands";
+
+        public static final String SORRY_CANNOT_PROCESS_YOUR_OTP_VERIFICATION = "Sorry, cannot process your OTP verification";
+
+        public static final String INVALID_OTP_PLEASE_TRY_AGAIN = "Invalid OTP, please try again";
+
+        public static final String OTP_VERIFICATION_SUCCESSFUL = "OTP verification successful";
+
+        public static final String USER_ALREADY_REGISTERED = "User already registered";
+
+        public static final String CONFIRM_YOUR_OTP_HERE_WITH_OTP_COMMAND = "Confirm your OTP here with /otp command";
+    }
+
+    public static class ExceptionMessage {
+        public static final String USERNAME_NOT_FOUND = "Username not found";
     }
 
 

@@ -2,18 +2,19 @@ package com.s2t.application.bot;
 
 import com.s2t.application.core.UserService;
 import com.s2t.application.model.Cache;
-import com.s2t.application.model.MapCache;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import lombok.extern.slf4j.Slf4j;
 
 import static com.s2t.application.util.StringConstants.Message.COMMAND_UNKNOWN_MESSAGE;
+import static com.s2t.application.util.StringConstants.Message.INVALID_OTP_PLEASE_TRY_AGAIN;
+import static com.s2t.application.util.StringConstants.Message.OTP_VERIFICATION_SUCCESSFUL;
+import static com.s2t.application.util.StringConstants.Message.SORRY_CANNOT_PROCESS_YOUR_OTP_VERIFICATION;
 
 @Component
 @Slf4j
@@ -97,13 +98,13 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private void processOtpAndRegisterUser(long userId, String otp) {
         if(!otpCache.containsKey(userId)) {
-            sendMessage(userId, "Sorry, cannot process your OTP verification");
+            sendMessage(userId, SORRY_CANNOT_PROCESS_YOUR_OTP_VERIFICATION);
         }
         if(!otpCache.getValue(userId).equals(otp)) {
-            sendMessage(userId, "Invalid OTP, please try again");
+            sendMessage(userId, INVALID_OTP_PLEASE_TRY_AGAIN);
         }
         userService.saveUser(userId);
-        sendMessage(userId, "OTP verification successful");
+        sendMessage(userId, OTP_VERIFICATION_SUCCESSFUL);
     }
 
     private void processMessage(long chatId, String messageText) {
