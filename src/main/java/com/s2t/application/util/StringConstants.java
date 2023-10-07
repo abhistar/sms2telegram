@@ -40,6 +40,8 @@ public class StringConstants {
     }
 
     public static class ExceptionMessage {
+
+        public static final String ERROR = "ERROR: ";
         public static final String USERNAME_NOT_FOUND = "Username not found";
     }
 
