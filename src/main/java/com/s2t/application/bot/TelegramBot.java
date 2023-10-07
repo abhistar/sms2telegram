@@ -52,7 +52,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     public void sendMessage(long userId, String messageText) {
         SendMessage message = SendMessage.builder().chatId(userId).text(messageText).build();
         execute(message);
-
     }
 
     private void executeNextAction(long userId, String messageText) {

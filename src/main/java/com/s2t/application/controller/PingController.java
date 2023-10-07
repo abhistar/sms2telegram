@@ -17,7 +17,7 @@ import static com.s2t.application.util.StringConstants.PONG;
 public class PingController {
     private final TelegramBot telegramBot;
 
-    @Value("${telegram.bit.test.chat_id}")
+    @Value("${telegram.bot.test.chat_id}")
     private Long testChatId;
 
     @GetMapping("")
