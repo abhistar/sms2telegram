@@ -2,35 +2,51 @@ package com.s2t.application.core;
 
 import com.s2t.application.model.UserEntity;
 import com.s2t.application.model.repository.UserRepository;
+import com.s2t.application.util.AuthUtil;
 import com.s2t.application.util.UserMapper;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.ObjectNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static com.s2t.application.util.StringConstants.ExceptionMessage.USERNAME_NOT_FOUND;
+
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
 
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        Optional<UserEntity> user = userRepository.findByChatId(userId);
-        if (user.isEmpty()) {
-            throw new UsernameNotFoundException("Unable to find given user");
+        try {
+            return UserMapper.getUserFromUserEntities(loadUserByUserId(userId));
         }
-        return UserMapper.getUserFromUserEntities(user.get());
+        catch (Exception e) {
+            throw new UsernameNotFoundException(USERNAME_NOT_FOUND);
+        }
     }
 
-    public UserEntity loadUserByChatId(Long chatId) {
-        Optional<UserEntity> user = userRepository.findByChatId(String.valueOf(chatId));
-        if (user.isEmpty()) {
-            throw new UsernameNotFoundException("Unable to find given user");
-        }
-        return user.get();
+    public UserEntity loadUserByUserId(Long userId) {
+        return loadUserByUserId(String.valueOf(userId));
+    }
+
+    public void saveUser(long userId) {
+        String password = passwordEncoder.encode(AuthUtil.generateOTP(10));
+        UserEntity user = new UserEntity(userId, password);
+        userRepository.save(user);
+    }
+
+    private UserEntity loadUserByUserId(String userId) {
+        Optional<UserEntity> user = userRepository.findByUserId(userId);
+        return user.orElse(null);
     }
 }

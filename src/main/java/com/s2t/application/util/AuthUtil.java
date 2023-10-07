@@ -7,7 +7,7 @@ import java.security.SecureRandom;
 
 @UtilityClass
 public class AuthUtil {
-    private static final int otpLength = 4;
+    private static final int otpLength = 6;
 
     public static String generateOTP() {
         return generateOTP(otpLength);

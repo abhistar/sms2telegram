@@ -1,9 +1,11 @@
 package com.s2t.application.model;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.GenerationType;
@@ -16,17 +18,17 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @Entity
+@NoArgsConstructor
 @Table(name = "user")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "chat_id", nullable = false)
-    private String chatId;
+    @Column(name = "user_id", nullable = false)
+    private String userId;
 
     @Column(name = "password", nullable = false)
     private String password;
@@ -35,8 +37,16 @@ public class UserEntity {
     private Boolean isActive;
 
     @Column(name = "created_at")
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    public UserEntity(Long userId, String password) {
+        this.userId = String.valueOf(userId);
+        this.isActive = true;
+        this.password = password;
+    }
 }

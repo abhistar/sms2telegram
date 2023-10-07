@@ -1,7 +1,7 @@
 package com.s2t.application.controller;
 
 import com.s2t.application.bot.TelegramBot;
-import com.s2t.application.model.dto.PingResponse;
+import com.s2t.application.model.dto.responses.PingResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;

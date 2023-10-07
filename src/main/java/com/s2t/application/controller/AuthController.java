@@ -1,12 +1,10 @@
 package com.s2t.application.controller;
 
-import com.s2t.application.model.dto.AuthRegisterResponse;
+import com.s2t.application.model.dto.responses.OtpResponse;
 import com.s2t.application.core.AuthService;
+import com.s2t.application.model.dto.responses.UserStatusResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,8 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("/register/{id}")
-    public AuthRegisterResponse registerTelegramId(@PathVariable Long id) {
-        return authService.registerUser(id);
+    @GetMapping("/{id}/otp")
+    public OtpResponse getOTP(@PathVariable Long id) {
+        return authService.getOTP(id);
+    }
+
+    @GetMapping("/{id}/status")
+    public UserStatusResponse getUserSignUpStatus(@PathVariable Long id) {
+        return authService.getUserSignUpStatus(id);
     }
 }

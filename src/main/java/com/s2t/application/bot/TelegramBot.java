@@ -1,5 +1,8 @@
 package com.s2t.application.bot;
 
+import com.s2t.application.core.UserService;
+import com.s2t.application.model.Cache;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -8,16 +11,24 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import lombok.extern.slf4j.Slf4j;
 
-import static com.s2t.application.util.StringConstants.*;
+import static com.s2t.application.util.StringConstants.Message.COMMAND_UNKNOWN_MESSAGE;
+import static com.s2t.application.util.StringConstants.Message.INVALID_OTP_PLEASE_TRY_AGAIN;
+import static com.s2t.application.util.StringConstants.Message.OTP_VERIFICATION_SUCCESSFUL;
+import static com.s2t.application.util.StringConstants.Message.SORRY_CANNOT_PROCESS_YOUR_OTP_VERIFICATION;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class TelegramBot extends TelegramLongPollingBot {
     @Value("${telegram.bot.token}")
     private String telegramBotToken;
 
     @Value("${telegram.bot.username}")
     private String telegramBotUsername;
+
+    private final Cache<Long, String> otpCache;
+
+    private final UserService userService;
 
     @Override
     public String getBotUsername() {
@@ -39,38 +50,65 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-    public void sendMessage(long chatId, String messageText) {
-        SendMessage message = SendMessage.builder().chatId(chatId).text(messageText).build();
+    public void sendMessage(long userId, String messageText) {
+        SendMessage message = SendMessage.builder().chatId(userId).text(messageText).build();
         sendMessage(message);
     }
 
-    private void executeNextAction(long chatId, String messageText) {
+    private void executeNextAction(long userId, String messageText) {
         if(messageText.startsWith("/")) {
-            processCommand(chatId, messageText.substring(1));
+            processCommand(userId, messageText.substring(1));
         } else {
-            processMessage(chatId, messageText);
+            processMessage(userId, messageText);
         }
+    }
+
+    private void processCommand(long userId, String command) {
+        String[] argList = command.split(" ");
+        switch (BotCommand.getByCommand(argList[0])) {
+            case START:
+                processStartCommand(userId);
+                break;
+            case READ:
+                processReadCommand(userId);
+                break;
+            case STOP_READ:
+                processStopReadCommand(userId);
+                break;
+            case OTP:
+                processOtpAndRegisterUser(userId, argList[1]);
+                break;
+            default:
+                sendMessage(userId, COMMAND_UNKNOWN_MESSAGE);
+                break;
+        }
+    }
+
+    private void processStartCommand(long userId) {
+        sendMessage(userId, String.format(BotCommand.START.getMessage(), userId));
+    }
+
+    private void processReadCommand(long userId) {
+        sendMessage(userId, BotCommand.READ.getMessage());
+    }
+
+    private void processStopReadCommand(long userId) {
+        sendMessage(userId, BotCommand.STOP_READ.getMessage());
+    }
+
+    private void processOtpAndRegisterUser(long userId, String otp) {
+        if(!otpCache.containsKey(userId)) {
+            sendMessage(userId, SORRY_CANNOT_PROCESS_YOUR_OTP_VERIFICATION);
+        }
+        if(!otpCache.getValue(userId).equals(otp)) {
+            sendMessage(userId, INVALID_OTP_PLEASE_TRY_AGAIN);
+        }
+        userService.saveUser(userId);
+        sendMessage(userId, OTP_VERIFICATION_SUCCESSFUL);
     }
 
     private void processMessage(long chatId, String messageText) {
         sendMessage(chatId, messageText);
-    }
-
-    private void processCommand(long chatId, String substring) {
-        switch (substring) {
-            case START:
-                sendMessage(chatId, WELCOME_MESSAGE);
-                break;
-            case READ:
-                sendMessage(chatId, READING_SMS_MESSAGE);
-                break;
-            case STOP_READ:
-                sendMessage(chatId, STOP_READING_SMS_MESSAGE);
-                break;
-            default:
-                sendMessage(chatId, COMMAND_UNKNOWN_MESSAGE);
-                break;
-        }
     }
 
     private void sendMessage(SendMessage message) {
