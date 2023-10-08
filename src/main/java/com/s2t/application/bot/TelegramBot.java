@@ -3,13 +3,12 @@ package com.s2t.application.bot;
 import com.s2t.application.core.UserService;
 import com.s2t.application.model.Cache;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import lombok.extern.slf4j.Slf4j;
 
 import static com.s2t.application.util.StringConstants.Message.COMMAND_UNKNOWN_MESSAGE;
 import static com.s2t.application.util.StringConstants.Message.INVALID_OTP_PLEASE_TRY_AGAIN;
@@ -17,7 +16,6 @@ import static com.s2t.application.util.StringConstants.Message.OTP_VERIFICATION_
 import static com.s2t.application.util.StringConstants.Message.SORRY_CANNOT_PROCESS_YOUR_OTP_VERIFICATION;
 
 @Component
-@Slf4j
 @RequiredArgsConstructor
 public class TelegramBot extends TelegramLongPollingBot {
     @Value("${telegram.bot.token}")
@@ -50,16 +48,18 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    @SneakyThrows
     public void sendMessage(long userId, String messageText) {
         SendMessage message = SendMessage.builder().chatId(userId).text(messageText).build();
-        sendMessage(message);
+        execute(message);
+
     }
 
     private void executeNextAction(long userId, String messageText) {
         if(messageText.startsWith("/")) {
             processCommand(userId, messageText.substring(1));
         } else {
-            processMessage(userId, messageText);
+            sendMessage(userId, messageText);
         }
     }
 
@@ -105,17 +105,5 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
         userService.saveUser(userId);
         sendMessage(userId, OTP_VERIFICATION_SUCCESSFUL);
-    }
-
-    private void processMessage(long chatId, String messageText) {
-        sendMessage(chatId, messageText);
-    }
-
-    private void sendMessage(SendMessage message) {
-        try {
-            execute(message);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
     }
 }

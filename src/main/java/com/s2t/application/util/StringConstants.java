@@ -36,10 +36,12 @@ public class StringConstants {
 
         public static final String USER_ALREADY_REGISTERED = "User already registered";
 
-        public static final String CONFIRM_YOUR_OTP_HERE_WITH_OTP_COMMAND = "Confirm your OTP here with /otp command";
+        public static final String CONFIRM_YOUR_OTP_HERE_WITH_OTP_COMMAND = "Confirm your OTP here with /otp command. Your OTP is valid for 2 minutes";
     }
 
     public static class ExceptionMessage {
+
+        public static final String ERROR = "ERROR: ";
         public static final String USERNAME_NOT_FOUND = "Username not found";
     }
 

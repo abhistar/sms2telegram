@@ -8,7 +8,6 @@ import com.s2t.application.model.dto.responses.UserStatusResponse;
 import com.s2t.application.model.enums.UserStatus;
 import com.s2t.application.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -17,7 +16,6 @@ import static com.s2t.application.util.StringConstants.Message.CONFIRM_YOUR_OTP_
 import static com.s2t.application.util.StringConstants.Message.USER_ALREADY_REGISTERED;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class AuthService {
     private final TelegramBot telegramBot;
@@ -30,7 +28,7 @@ public class AuthService {
         String otpToken = AuthUtil.generateOTP();
 
         UserEntity user = userService.loadUserByUserId(id);
-        if(Objects.nonNull(user) && user.getIsActive()) {
+        if(Objects.nonNull(user)) {
             return OtpResponse.builder().message(USER_ALREADY_REGISTERED).build();
         }
         otpCache.addKey(id, otpToken);
@@ -43,10 +41,12 @@ public class AuthService {
 
     public UserStatusResponse getUserSignUpStatus(Long id) {
         UserEntity user = userService.loadUserByUserId(id);
-        if(Objects.nonNull(user) && user.getIsActive()) {
-            return UserStatusResponse.builder().userStatus(UserStatus.ACTIVE)
-                    .token(user.getPassword()).build();
+        if(Objects.isNull(user)) {
+            return UserStatusResponse.builder().userStatus(UserStatus.UNREGISTERED).build();
         }
-        return UserStatusResponse.builder().userStatus(UserStatus.INACTIVE).build();
+        if(!user.getIsActive()) {
+            return UserStatusResponse.builder().userStatus(UserStatus.INACTIVE).build();
+        }
+        return UserStatusResponse.builder().userStatus(UserStatus.ACTIVE).token(user.getPassword()).build();
     }
 }
