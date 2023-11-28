@@ -1,7 +1,9 @@
 package com.s2t.application.bot;
 
+import com.s2t.application.core.NotificationService;
 import com.s2t.application.core.UserService;
 import com.s2t.application.model.Cache;
+import com.s2t.application.util.StringConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +29,8 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final Cache<Long, String> otpCache;
 
     private final UserService userService;
+
+    private final NotificationService notificationService;
 
     @Override
     public String getBotUsername() {
@@ -89,10 +93,16 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private void processReadCommand(long userId) {
         sendMessage(userId, BotCommand.READ.getMessage());
+        /* TODO add method to enable reading sms from mobile app
+             use Push Notification service to enable */
+        notificationService.sendNotification(StringConstants.Message.READING_SMS_FROM_YOUR_DEVICE);
     }
 
     private void processStopReadCommand(long userId) {
         sendMessage(userId, BotCommand.STOP_READ.getMessage());
+        /* TODO add method to disable reading sms from mobile app
+             use Push Notification service to enable */
+        notificationService.sendNotification(StringConstants.Message.STOPPED_READING_SMS_FROM_YOUR_DEVICE);
     }
 
     private void processOtpAndRegisterUser(long userId, String otp) {
