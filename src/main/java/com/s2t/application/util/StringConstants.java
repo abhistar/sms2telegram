@@ -37,6 +37,10 @@ public class StringConstants {
         public static final String USER_ALREADY_REGISTERED = "User already registered";
 
         public static final String CONFIRM_YOUR_OTP_HERE_WITH_OTP_COMMAND = "Confirm your OTP here with /otp command. Your OTP is valid for 2 minutes";
+
+        public static final String READING_SMS_FROM_YOUR_DEVICE = "Reading sms from your device";
+
+        public static final String STOPPED_READING_SMS_FROM_YOUR_DEVICE = "Stopped reading sms from your device";
     }
 
     public static class ExceptionMessage {
